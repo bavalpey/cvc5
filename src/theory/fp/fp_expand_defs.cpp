@@ -29,7 +29,8 @@ FpExpandDefs::FpExpandDefs(context::UserContext* u)
       d_maxMap(u),
       d_toUBVMap(u),
       d_toSBVMap(u),
-      d_toRealMap(u)
+      d_toRealMap(u),
+      dp_toIEEEBVMap(u)
 {
 }
 
@@ -158,6 +159,31 @@ Node FpExpandDefs::toSBVUF(Node node)
   return nm->mkNode(Kind::APPLY_UF, fun, node[0], node[1]);
 }
 
+Node FpExpandDefs::toIEEEBVUF(Node node) {
+  Assert(node.getKind() == Kind::FLOATINGPOINT_TO_IEEE_BV);
+  TypeNode target(node.getType());
+  Assert(target.getKind() == Kind::BITVECTOR_TYPE);
+
+  NodeManager* nm = NodeManager::currentNM();
+  SkolemManager* sm = nm->getSkolemManager();
+  ComparisonUFMap::const_iterator i(d_toIEEEBVMap.find(target));
+
+  Node fun;
+
+  if (i == d_toIEEEBVMap.end()) {
+    std::vector<TypeNode> args(1);
+    args[0] = target;
+    fun = sm->mkDummySkolem("floatingpoint_to_ieee_bv_NaN_case",
+                            nm->mkFunctionType(args, target),
+                            "floatingpoint_to_ieee_bv_NaN_case");
+    d_toIEEEBVMap.insert(target, fun);
+  } else {
+    fun = (*i).second;
+  }
+
+  return nm->mkNode(Kind::APPLY_UF, fun, node[0]);
+}
+
 Node FpExpandDefs::toRealUF(Node node)
 {
   Assert(node.getKind() == Kind::FLOATINGPOINT_TO_REAL);
@@ -231,6 +257,11 @@ TrustNode FpExpandDefs::expandDefinition(Node node)
   {
     res = NodeManager::currentNM()->mkNode(
         Kind::FLOATINGPOINT_TO_REAL_TOTAL, node[0], toRealUF(node));
+  }
+  else if (kind == Kind::FLOATINGPOINT_TO_IEEE_BV)
+  {
+    res = NodeManager::currentNM()->mkNode(
+        Kind::FLOATINGPOINT_TO_IEEE_BITVECTOR_TOTAL, node[0], toIEEEBVUF(node));
   }
 
   if (res != node)

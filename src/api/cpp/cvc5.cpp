@@ -299,6 +299,8 @@ const static std::unordered_map<Kind, std::pair<internal::Kind, std::string>>
                   internal::Kind::FLOATINGPOINT_TO_SBV),
         KIND_ENUM(Kind::FLOATINGPOINT_TO_REAL,
                   internal::Kind::FLOATINGPOINT_TO_REAL),
+        KIND_ENUM(Kind::FLOATINGPOINT_TO_IEEE_BV,
+                  internal::Kind::FLOATINGPOINT_TO_IEEE_BV),
         /* Arrays ----------------------------------------------------------- */
         KIND_ENUM(Kind::SELECT, internal::Kind::SELECT),
         KIND_ENUM(Kind::STORE, internal::Kind::STORE),

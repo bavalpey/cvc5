@@ -122,10 +122,12 @@ void TheoryFp::finishInit()
   d_equalityEngine->addFunctionKind(Kind::FLOATINGPOINT_TO_FP_FROM_REAL);
   d_equalityEngine->addFunctionKind(Kind::FLOATINGPOINT_TO_FP_FROM_SBV);
   d_equalityEngine->addFunctionKind(Kind::FLOATINGPOINT_TO_FP_FROM_UBV);
+  d_equalityEngine->addFunctionKind(Kind::FLOATINGPOINT_TO_IEEE_BV);
 
   d_equalityEngine->addFunctionKind(Kind::FLOATINGPOINT_TO_UBV_TOTAL);
   d_equalityEngine->addFunctionKind(Kind::FLOATINGPOINT_TO_SBV_TOTAL);
   d_equalityEngine->addFunctionKind(Kind::FLOATINGPOINT_TO_REAL_TOTAL);
+  d_equalityEngine->addFunctionKind(Kind::FLOATINGPOINT_TO_IEEE_BV_TOTAL);
 
   d_equalityEngine->addFunctionKind(Kind::FLOATINGPOINT_COMPONENT_NAN);
   d_equalityEngine->addFunctionKind(Kind::FLOATINGPOINT_COMPONENT_INF);

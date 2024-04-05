@@ -796,6 +796,94 @@ TypeNode FloatingPointToSBVTotalTypeRule::computeType(NodeManager* nodeManager,
   return nodeManager->mkBitVectorType(info.d_bv_size);
 }
 
+
+TypeNode FloatingPointToIEEEBVTypeRule::preComputeType(NodeManager* nm, TNode n)
+{
+  FloatingPointToIEEEBV info = n.getOperator().getConst<FloatingPointToIEEEBV>();
+  return nm->mkBitVectorType(info.d_bv_size);
+}
+
+TypeNode FloatingPointToIEEEBVTypeRule::computeType(NodeManager* nodeManager,
+                                                    TNode n,
+                                                    bool check,
+                                                    std::ostream* errOut)
+{
+  TRACE("FloatingPointToIEEEBVTypeRule");
+  AlwaysAssert(n.getNumChildren() == 1);
+
+  FloatingPointToIEEEBV info = n.getOperator().getConst<FloatingPointToIEEEBV>();
+
+  if (check)
+  {
+    TypeNode operandType = n[0].getTypeOrNull();
+
+    if (!operandType.isMaybeKind(Kind::FLOATINGPOINT_TYPE))
+    {
+      if (errOut)
+      {
+        (*errOut) << "conversion to IEEE bit vector "
+                     "used with a sort other than "
+                     "floating-point";
+      }
+      return TypeNode::null();
+    }
+  }
+
+  return nodeManager->mkBitVectorType(info.d_bv_size);
+}
+
+TypeNode FloatingPointToIEEEBVTotalTypeRule::preComputeType(NodeManager* nm,
+                                                            TNode n)
+{
+  FloatingPointToIEEEBVTotal info =
+      n.getOperator().getConst<FloatingPointToIEEEBVTotal>();
+  return nm->mkBitVectorType(info.d_bv_size);
+}
+
+TypeNode FloatingPointToIEEEBVTotalTypeRule::computeType(NodeManager* nodeManager,
+                                                         TNode n,
+                                                         bool check,
+                                                         std::ostream* errOut)
+{
+  TRACE("FloatingPointToIEEEBVTotalTypeRule");
+  AlwaysAssert(n.getNumChildren() == 2);
+
+  FloatingPointToIEEEBVTotal info =
+      n.getOperator().getConst<FloatingPointToIEEEBVTotal>();
+
+  if (check)
+  {
+    TypeNode operandType = n[0].getTypeOrNull();
+
+    if (!operandType.isMaybeKind(Kind::FLOATINGPOINT_TYPE))
+    {
+      if (errOut)
+      {
+        (*errOut) << "conversion to IEEE bit vector total "
+                     "used with a sort other than "
+                     "floating-point";
+      }
+      return TypeNode::null();
+    }
+
+    TypeNode defaultValueType = n[1].getTypeOrNull();
+
+    if (!(defaultValueType.isMaybeKind(Kind::BITVECTOR_TYPE))
+        || !(defaultValueType.getBitVectorSize() == info))
+    {
+      if (errOut)
+      {
+        (*errOut) << "conversion to IEEE bit vector total"
+                     "needs a bit vector of the same length"
+                     "as last argument";
+      }
+      return TypeNode::null();
+    }
+  }
+
+  return nodeManager->mkBitVectorType(info.d_bv_size);
+}
+
 TypeNode FloatingPointToRealTypeRule::preComputeType(NodeManager* nm, TNode n)
 {
   return nm->realType();

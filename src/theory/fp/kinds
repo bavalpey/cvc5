@@ -280,6 +280,18 @@ operator FLOATINGPOINT_TO_REAL_TOTAL 2 "floating-point to real (defined for all 
 typerule FLOATINGPOINT_TO_REAL_TOTAL   ::cvc5::internal::theory::fp::FloatingPointToRealTotalTypeRule
 
 
+constant FLOATINGPOINT_TO_IEEE_BV_OP \
+    class \
+    FloatingPointToIEEEBV \
+    "::cvc5::internal::FloatingPointConvertSortHashFunction<0x20>" \
+    "util/floatingpoint.h" \
+    "operator for to_fp_ieee_bv"
+
+operator FLOATINGPOINT_TO_FP_IEEE_BV 1 "floating-point to IEEE bit vector"
+typerule FLOATINGPOINT_TO_REAL   ::cvc5::internal::theory::fp::FloatingPointToIEEEBVTypeRule
+
+operator FLOATINGPOINT_TO_FP_IEEE_BV_TOTAL 2 "floating-point to IEEE bit vector (defined for all inputs)"
+typerule FLOATINGPOINT_TO_FP_IEEE_BV_TOTAL   ::cvc5::internal::theory::fp::FloatingPointToIEEEBVTotalTypeRule
 
 operator FLOATINGPOINT_COMPONENT_NAN 1 "NaN component of a word-blasted floating-point number"
 typerule FLOATINGPOINT_COMPONENT_NAN   ::cvc5::internal::theory::fp::FloatingPointComponentBit

@@ -53,6 +53,7 @@ class FpExpandDefs
   Node toUBVUF(Node);
   Node toSBVUF(Node);
   Node toRealUF(Node);
+  Node toIEEEBVUF(Node);
   Node abstractRealToFloat(Node);
   Node abstractFloatToReal(Node);
   ComparisonUFMap d_minMap;

@@ -264,6 +264,7 @@ void Smt2State::addFloatingPointOperators()
   addOperator(Kind::FLOATINGPOINT_IS_NEG, "fp.isNegative");
   addOperator(Kind::FLOATINGPOINT_IS_POS, "fp.isPositive");
   addOperator(Kind::FLOATINGPOINT_TO_REAL, "fp.to_real");
+  addOperator(Kind::FLOATINGPOINT_TO_IEEEBV, "fp.to_ieee_bv");
 
   addIndexedOperator(Kind::UNDEFINED_KIND, "to_fp");
   addIndexedOperator(Kind::FLOATINGPOINT_TO_FP_FROM_UBV, "to_fp_unsigned");

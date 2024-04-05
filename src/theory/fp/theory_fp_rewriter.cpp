@@ -902,6 +902,27 @@ RewriteResponse maxTotal(TNode node, bool isPreRewrite)
     }
   }
 
+  RewriteResponse convertToIEEEBV(Tnode node, bool isPreRewrite)
+  {
+    Assert(node.getKind() == Kind::FLOATINGPOINT_TO_IEEE_BV);
+
+    TNode op = node.getOperator();
+    const FloatingPointToIEEEBitVector &param = op.getConst<FloatingPointToIEEEBitVector>();
+    const FloatingPoint &arg = node[0].getConst<FloatingPoint>();
+
+    FloatingPoint arg(node[0].getConst<FloatingPoint>());
+
+    FloatingPoint::PartialBitVector res(arg.pack(), !arg.isNaN());
+
+    if (res.second) {
+      Node lit = NodeManager::currentNM()->mkConst(res.first);
+      return RewriteResponse(REWRITE_DONE, lit);
+    } else {
+      // Can't constant fold the underspecified case
+      return RewriteResponse(REWRITE_DONE, node);
+    }
+  }
+
   RewriteResponse convertToUBVTotal(TNode node, bool isPreRewrite)
   {
     Assert(node.getKind() == Kind::FLOATINGPOINT_TO_UBV_TOTAL);
@@ -990,6 +1011,24 @@ RewriteResponse maxTotal(TNode node, bool isPreRewrite)
 	// Can't constant fold the underspecified case
 	return RewriteResponse(REWRITE_DONE, node);
       }
+    }
+  }
+
+  RewriteResponse convertToIEEEBVTotal(TNode node, bool isPreRewrite)
+  {
+    Assert(node.getKind() == Kind::FLOATINGPOINT_TO_IEEE_BV_TOTAL);
+
+    FloatingPoint arg(node[0].getConst<FloatingPoint>());
+    BitVector nanCase(node[1].getConst<BitVector>());
+
+    if (arg.isNaN()) {
+      // how to use the meta kind?
+      // Should return nanCase | bv(-1, eb.size()) << sp.size()) & (nanCase & ())
+      // how to get this... Do we follow what toReal does?
+      // 
+    } else {
+      Node lit = NodeManager::currentNM()->mkConst(arg.pack());
+      return RewriteResponse(REWRITE_DONE, lit);
     }
   }
 
@@ -1314,11 +1353,15 @@ RewriteResponse maxTotal(TNode node, bool isPreRewrite)
     d_postRewriteTable[static_cast<uint32_t>(Kind::FLOATINGPOINT_TO_REAL)] =
         rewrite::identity;
     d_postRewriteTable[static_cast<uint32_t>(
+        Kind::FLOATINGPOINT_TO_IEEE_BV)] = rewrite::identity;
+    d_postRewriteTable[static_cast<uint32_t>(
         Kind::FLOATINGPOINT_TO_UBV_TOTAL)] = rewrite::identity;
     d_postRewriteTable[static_cast<uint32_t>(
         Kind::FLOATINGPOINT_TO_SBV_TOTAL)] = rewrite::identity;
     d_postRewriteTable[static_cast<uint32_t>(
         Kind::FLOATINGPOINT_TO_REAL_TOTAL)] = rewrite::identity;
+    d_postRewriteTable[static_cast<uint32_t>(
+        Kind::FLOATINGPOINT_TO_IEEE_BV_TOTAL)] = rewrite::identity;
 
     /******** Variables ********/
     d_postRewriteTable[static_cast<uint32_t>(Kind::VARIABLE)] =

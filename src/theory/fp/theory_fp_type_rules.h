@@ -250,6 +250,29 @@ class FloatingPointToRealTotalTypeRule
                               std::ostream* errOut);
 };
 
+class FloatingPointToIEEEBVTypeRule
+{
+ public:
+  static TypeNode preComputeType(NodeManager* nm, TNode n);
+
+  static TypeNode computeType(NodeManager* nodeManager,
+                              TNode n,
+                              bool check,
+                              std::ostream* errOut);
+};
+
+class FloatingPointToIEEEBVTotalTypeRule
+{
+ public:
+  static TypeNode preComputeType(NodeManager* nm, TNode n);
+
+  static TypeNode computeType(NodeManager* nodeManager,
+                              TNode n,
+                              bool check,
+                              std::ostream* errOut);
+};
+
+
 /** Type rule for floating-point components of bit-width 1. */
 class FloatingPointComponentBit
 {

@@ -1358,6 +1358,9 @@ std::string Smt2Printer::smtKindString(Kind k)
     case Kind::FLOATINGPOINT_TO_SBV_TOTAL: return "fp.to_sbv_total";
     case Kind::FLOATINGPOINT_TO_REAL: return "fp.to_real";
     case Kind::FLOATINGPOINT_TO_REAL_TOTAL: return "fp.to_real_total";
+    case Kind::FLOATINGPOINT_TO_IEEE_BV: return "fp.to_ieee_bv";
+    case Kind::FLOATINGPOINT_TO_IEEE_BV_TOTAL: return "fp.to_ieee_bv_total";
+
 
     case Kind::FLOATINGPOINT_COMPONENT_NAN: return "NAN";
     case Kind::FLOATINGPOINT_COMPONENT_INF: return "INF";
